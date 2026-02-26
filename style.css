@@ -1,0 +1,190 @@
+:root{
+  --bg:#5b1f1f;
+  --paper:#f3f1ee;
+  --ink:#5a1f1f;
+  --muted:#e9dfda;
+  --seal:#8b0f14;
+  --shadow: 0 20px 50px rgba(0,0,0,.25);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: radial-gradient(1200px 900px at 50% 10%, #6a2a2a 0%, var(--bg) 55%, #3d1111 100%);
+  color:#fff;
+  min-height:100vh;
+}
+
+.wrap{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:24px;
+}
+
+.screen{display:none; width:min(920px, 100%);}
+.screen.active{display:block;}
+
+.top{text-align:center; margin-bottom:18px;}
+h1{
+  margin:0;
+  letter-spacing:.14em;
+  font-weight:600;
+  font-size: clamp(28px, 5vw, 48px);
+}
+.hint{margin:10px 0 0; opacity:.9}
+
+.tiny{text-align:center; opacity:.7; margin-top:18px; font-size:13px}
+
+/* Envelope button */
+.envelope{
+  width:min(520px, 92vw);
+  aspect-ratio: 16/10;
+  border:0;
+  background:transparent;
+  cursor:pointer;
+  position:relative;
+  display:block;
+  margin: 18px auto 0;
+  transform: translateZ(0);
+}
+
+.env-body{
+  position:absolute; inset: 18% 6% 10% 6%;
+  background: linear-gradient(145deg, #f2efe9, #e9e3db);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  border:1px solid rgba(0,0,0,.08);
+}
+
+.env-flap{
+  position:absolute;
+  left:6%; right:6%;
+  top:18%;
+  height:45%;
+  background: linear-gradient(145deg, #f7f4ee, #e7dfd6);
+  clip-path: polygon(0 0, 100% 0, 50% 85%);
+  transform-origin: top center;
+  transition: transform 700ms cubic-bezier(.2,.9,.2,1);
+  border-top-left-radius:10px;
+  border-top-right-radius:10px;
+}
+
+.env-seal{
+  position:absolute;
+  left:50%; top:47%;
+  width:76px; height:76px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at 30% 30%, #c33439, var(--seal));
+  border-radius: 50%;
+  box-shadow: 0 10px 20px rgba(0,0,0,.25);
+}
+
+.envelope.open .env-flap{
+  transform: rotateX(160deg);
+}
+
+/* Letter screen */
+#screen-letter{
+  position:relative;
+}
+
+.letter{
+  background: linear-gradient(180deg, #fbfaf8, var(--paper));
+  color: var(--ink);
+  border-radius: 18px;
+  padding: clamp(18px, 3vw, 34px);
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(0,0,0,.08);
+  position:relative;
+  overflow:hidden;
+}
+
+.letter h2{
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
+  font-size: clamp(28px, 4vw, 44px);
+  margin:0 0 10px;
+  font-style: italic;
+}
+
+.letter p{
+  line-height:1.55;
+  font-size: clamp(15px, 2.2vw, 18px);
+  margin: 10px 0;
+}
+
+.letter hr{
+  border:0;
+  height:1px;
+  background: rgba(90,31,31,.2);
+  margin: 18px 0;
+}
+
+.rsvp a{color: var(--ink); text-decoration: underline}
+
+.actions{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin: 14px 0 6px;
+}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--ink);
+  color:#fff;
+  text-decoration:none;
+  font-weight:600;
+}
+
+.btn.ghost{
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid rgba(90,31,31,.35);
+}
+
+.sign{margin-top:16px}
+.back{
+  margin-top: 14px;
+  border:0;
+  background: transparent;
+  color: var(--ink);
+  font-weight:700;
+  cursor:pointer;
+  padding: 8px 0;
+}
+
+/* Balloons (simple CSS art) */
+.balloons{
+  position:absolute;
+  width:140px; height:220px;
+  opacity:.95;
+  filter: drop-shadow(0 12px 18px rgba(0,0,0,.25));
+}
+.balloons-left{left:-12px; top:10px}
+.balloons-right{right:-12px; top:10px; transform: scaleX(-1)}
+.balloons::before,
+.balloons::after{
+  content:"";
+  position:absolute;
+  width:86px; height:110px;
+  border-radius: 50%;
+  top:12px;
+}
+.balloons::before{
+  left:12px;
+  background: radial-gradient(circle at 30% 30%, #ffd9b0, #f0b073);
+}
+.balloons::after{
+  left:58px;
+  background: radial-gradient(circle at 30% 30%, #bdeeff, #58b6d8);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .env-flap{transition:none}
+}
