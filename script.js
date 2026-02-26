@@ -3,19 +3,30 @@ const screenInvite = document.getElementById("screen-invite");
 const screenLetter = document.getElementById("screen-letter");
 const backBtn = document.getElementById("backBtn");
 
-const phone = "+2347034768479"; // change if needed
-const whatsappNumber = "2347034768479"; // WhatsApp needs country code, no +
+const whatsappNumber = "2347034768479"; // no +
 const message = encodeURIComponent(
   "Hello, I’m confirming my attendance for Kachi’s 1st birthday. 🎉"
 );
-
 document.getElementById("whatsAppLink").href =
   `https://wa.me/${whatsappNumber}?text=${message}`;
 
+// Add cute balloon DOM elements (replaces plain before/after balloons)
+function buildBalloons() {
+  const left = document.querySelector(".balloons-left");
+  const right = document.querySelector(".balloons-right");
+  [left, right].forEach(el => {
+    el.innerHTML = `
+      <div class="balloon b1"></div>
+      <div class="balloon b2"></div>
+      <div class="balloon b3"></div>
+      <div class="string"></div>
+    `;
+  });
+}
+buildBalloons();
+
+// Calendar file (same as before)
 function buildICS() {
-  // 19 April 2026, 1:00 PM Nigeria (Africa/Lagos is UTC+1)
-  // We’ll store as UTC for broad compatibility:
-  // 1:00 PM WAT (UTC+1) = 12:00 PM UTC
   const ics =
 `BEGIN:VCALENDAR
 VERSION:2.0
@@ -35,19 +46,72 @@ END:VCALENDAR`;
 
   const blob = new Blob([ics], { type: "text/calendar" });
   const url = URL.createObjectURL(blob);
-  const a = document.getElementById("calendarLink");
-  a.href = url;
+  document.getElementById("calendarLink").href = url;
 }
-
 buildICS();
 
+/* Confetti */
+const confettiLayer = document.createElement("canvas");
+confettiLayer.className = "confetti";
+document.body.appendChild(confettiLayer);
+const ctx = confettiLayer.getContext("2d");
+
+function resize() {
+  confettiLayer.width = window.innerWidth * devicePixelRatio;
+  confettiLayer.height = window.innerHeight * devicePixelRatio;
+}
+window.addEventListener("resize", resize);
+resize();
+
+let confetti = [];
+function burst() {
+  const colors = ["#ff4d7d","#ffd166","#4cc9f0","#ffffff"];
+  const count = 140;
+  confetti = Array.from({ length: count }, () => ({
+    x: Math.random() * confettiLayer.width,
+    y: -20 * devicePixelRatio,
+    vx: (Math.random() - 0.5) * 4 * devicePixelRatio,
+    vy: (Math.random() * 3 + 2) * devicePixelRatio,
+    r: (Math.random() * 6 + 3) * devicePixelRatio,
+    rot: Math.random() * Math.PI,
+    vr: (Math.random() - 0.5) * 0.2,
+    c: colors[Math.floor(Math.random() * colors.length)],
+    life: Math.random() * 120 + 80
+  }));
+}
+
+function tick() {
+  ctx.clearRect(0,0,confettiLayer.width,confettiLayer.height);
+  confetti.forEach(p => {
+    p.x += p.vx;
+    p.y += p.vy;
+    p.rot += p.vr;
+    p.vy *= 1.005;
+    p.life -= 1;
+
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.rot);
+    ctx.fillStyle = p.c;
+    ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r*1.4);
+    ctx.restore();
+  });
+  confetti = confetti.filter(p => p.life > 0 && p.y < confettiLayer.height + 40);
+  requestAnimationFrame(tick);
+}
+tick();
+
+/* Cinematic open */
 envelopeBtn.addEventListener("click", () => {
   envelopeBtn.classList.add("open");
+  burst();
+
+  // slight pause like a "reveal"
   setTimeout(() => {
     screenInvite.classList.remove("active");
     screenLetter.classList.add("active");
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, 650);
+  }, 750);
 });
 
 backBtn.addEventListener("click", () => {
