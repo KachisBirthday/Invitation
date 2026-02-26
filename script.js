@@ -1,10 +1,39 @@
 const envelope = document.getElementById("envelope");
 const openBtn = document.getElementById("openBtn");
+const popSound = document.getElementById("popSound");
 
-// WhatsApp + Calendar (same as before)
-const whatsappNumber = "2347034768479"; // no +
+// ===== Background balloons generator =====
+const bg = document.querySelector(".bg-balloons");
+const colors = ["#ffd166", "#4cc9f0", "#ff4d7d", "#7cf7c6", "#ffffff"];
+
+function makeBalloons(count = 18){
+  bg.innerHTML = "";
+  for(let i=0;i<count;i++){
+    const b = document.createElement("span");
+    const w = 56 + Math.random() * 46;
+    b.style.width = `${w}px`;
+    b.style.height = `${w * 1.25}px`;
+    b.style.left = `${Math.random() * 100}%`;
+    b.style.top = `${Math.random() * 100}%`;
+    b.style.opacity = `${0.35 + Math.random() * 0.55}`;
+    b.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    b.style.animationDelay = `${Math.random() * 2.2}s`;
+    bg.appendChild(b);
+  }
+}
+makeBalloons(window.innerWidth < 520 ? 12 : 18);
+window.addEventListener("resize", () => {
+  makeBalloons(window.innerWidth < 520 ? 12 : 18);
+  resizeCanvas();
+});
+
+// ===== WhatsApp / Maps / Calendar =====
+const whatsappNumber = "2347034768479";
 const message = encodeURIComponent("Hello, I’m confirming my attendance for Kachi’s 1st birthday. 🎉");
 document.getElementById("whatsAppLink").href = `https://wa.me/${whatsappNumber}?text=${message}`;
+
+document.getElementById("mapLink").href =
+  "https://www.google.com/maps/search/?api=1&query=20b+Ekulu+Avenue+GRA+Enugu";
 
 function buildICS() {
   // 19 April 2026, 1:00 PM WAT (UTC+1) => 12:00 PM UTC
@@ -30,32 +59,30 @@ END:VCALENDAR`;
 }
 buildICS();
 
-// ===== Background balloons generator (Canva vibe) =====
-const bg = document.querySelector(".bg-balloons");
-const colors = ["#ffd166", "#4cc9f0", "#ff4d7d", "#7cf7c6", "#ffffff"];
+// ===== Countdown =====
+const targetDate = new Date("April 19, 2026 13:00:00 GMT+0100").getTime();
 
-function makeBalloons(count = 18){
-  bg.innerHTML = "";
-  for(let i=0;i<count;i++){
-    const b = document.createElement("span");
-    const w = 56 + Math.random() * 42;
-    b.style.width = `${w}px`;
-    b.style.height = `${w * 1.25}px`;
-    b.style.left = `${Math.random() * 100}%`;
-    b.style.top = `${Math.random() * 100}%`;
-    b.style.opacity = `${0.35 + Math.random() * 0.55}`;
-    b.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-    b.style.animationDelay = `${Math.random() * 2.2}s`;
-    bg.appendChild(b);
-  }
+function pad(n){ return String(n).padStart(2,"0"); }
+
+function updateCountdown(){
+  const now = Date.now();
+  let diff = targetDate - now;
+  if (diff < 0) diff = 0;
+
+  const days = Math.floor(diff / (1000*60*60*24));
+  const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+  const minutes = Math.floor((diff % (1000*60*60)) / (1000*60));
+  const seconds = Math.floor((diff % (1000*60)) / 1000);
+
+  document.getElementById("days").textContent = days;
+  document.getElementById("hours").textContent = pad(hours);
+  document.getElementById("minutes").textContent = pad(minutes);
+  document.getElementById("seconds").textContent = pad(seconds);
 }
-makeBalloons(window.innerWidth < 520 ? 12 : 18);
+updateCountdown();
+setInterval(updateCountdown, 1000);
 
-window.addEventListener("resize", () => {
-  makeBalloons(window.innerWidth < 520 ? 12 : 18);
-});
-
-// ===== Confetti burst =====
+// ===== Confetti =====
 const confettiLayer = document.createElement("canvas");
 confettiLayer.className = "confetti";
 document.body.appendChild(confettiLayer);
@@ -66,13 +93,12 @@ function resizeCanvas(){
   confettiLayer.height = window.innerHeight * devicePixelRatio;
 }
 resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
 
 let confetti = [];
 
 function burst(){
   const palette = ["#ff4d7d","#ffd166","#4cc9f0","#7cf7c6","#ffffff"];
-  const count = 180;
+  const count = 190;
   confetti = Array.from({ length: count }, () => ({
     x: (Math.random() * window.innerWidth) * devicePixelRatio,
     y: (-30) * devicePixelRatio,
@@ -102,18 +128,21 @@ function tick(){
     ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r*1.6);
     ctx.restore();
   });
+
   confetti = confetti.filter(p => p.life > 0 && p.y < confettiLayer.height + 60);
   requestAnimationFrame(tick);
 }
 tick();
 
-// ===== Open behavior (realistic timing) =====
+// ===== Open behavior =====
 function openEnvelope(){
   if (envelope.classList.contains("open")) return;
+
   envelope.classList.add("open");
+  try { popSound.currentTime = 0; popSound.play(); } catch(e){}
+
   burst();
 
-  // Smooth scroll so user notices the letter rising
   setTimeout(() => {
     envelope.scrollIntoView({ behavior: "smooth", block: "center" });
   }, 250);
@@ -121,3 +150,6 @@ function openEnvelope(){
 
 openBtn.addEventListener("click", openEnvelope);
 envelope.addEventListener("click", openEnvelope);
+envelope.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" || e.key === " ") openEnvelope();
+});
