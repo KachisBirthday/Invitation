@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kachi’s 1st Birthday Invitation</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="wrap">
+    <!-- Screen 1: Invitation -->
+    <section id="screen-invite" class="screen active" aria-label="Invitation screen">
+      <div class="top">
+        <h1>INVITATION</h1>
+        <p class="hint">Tap on the envelope to open</p>
+      </div>
+
+      <button id="envelopeBtn" class="envelope" aria-label="Open invitation envelope">
+        <div class="env-body"></div>
+        <div class="env-flap"></div>
+        <div class="env-seal" aria-hidden="true"></div>
+      </button>
+
+      <p class="tiny">Made with ❤️</p>
+    </section>
+
+    <!-- Screen 2: Letter -->
+    <section id="screen-letter" class="screen" aria-label="Letter screen">
+      <div class="balloons balloons-left" aria-hidden="true"></div>
+      <div class="balloons balloons-right" aria-hidden="true"></div>
+
+      <article class="letter" role="article">
+        <h2>Dearest friend</h2>
+
+        <p>
+          You are most cordially invited to celebrate a most joyous occasion —
+          the First Year of the esteemed <strong>Ohalewe Kachimsidee David</strong>. 🎂
+        </p>
+
+        <p>
+          Your presence is not merely requested, it is implored.
+        </p>
+
+        <p>
+          Join us on <strong>Sunday, 19th April 2026</strong> at <strong>1:00 PM</strong>,
+          at <strong>20b Ekulu Avenue, GRA, Enugu</strong> (DSTV Office, Opposite Veronica Suites).
+          Come dressed in your most colourful &amp; festive attire.
+        </p>
+
+        <hr />
+
+        <p class="rsvp">
+          Kindly confirm your attendance:
+          <strong><a id="callLink" href="tel:+2347034768479">0703 476 8479</a></strong>
+        </p>
+
+        <div class="actions">
+          <a class="btn" id="whatsAppLink" href="#" rel="noopener">RSVP on WhatsApp</a>
+          <a class="btn ghost" id="calendarLink" href="#" download="KachiBirthday.ics">Add to Calendar</a>
+        </div>
+
+        <p class="sign">
+          With the utmost affection,<br />
+          <strong>The Ohalewe Family</strong> 🕯️✨
+        </p>
+
+        <button id="backBtn" class="back">← Back</button>
+      </article>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+:root{
+  --bg:#5b1f1f;
+  --paper:#f3f1ee;
+  --ink:#5a1f1f;
+  --muted:#e9dfda;
+  --seal:#8b0f14;
+  --shadow: 0 20px 50px rgba(0,0,0,.25);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: radial-gradient(1200px 900px at 50% 10%, #6a2a2a 0%, var(--bg) 55%, #3d1111 100%);
+  color:#fff;
+  min-height:100vh;
+}
+
+.wrap{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:24px;
+}
+
+.screen{display:none; width:min(920px, 100%);}
+.screen.active{display:block;}
+
+.top{text-align:center; margin-bottom:18px;}
+h1{
+  margin:0;
+  letter-spacing:.14em;
+  font-weight:600;
+  font-size: clamp(28px, 5vw, 48px);
+}
+.hint{margin:10px 0 0; opacity:.9}
+
+.tiny{text-align:center; opacity:.7; margin-top:18px; font-size:13px}
+
+/* Envelope button */
+.envelope{
+  width:min(520px, 92vw);
+  aspect-ratio: 16/10;
+  border:0;
+  background:transparent;
+  cursor:pointer;
+  position:relative;
+  display:block;
+  margin: 18px auto 0;
+  transform: translateZ(0);
+}
+
+.env-body{
+  position:absolute; inset: 18% 6% 10% 6%;
+  background: linear-gradient(145deg, #f2efe9, #e9e3db);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  border:1px solid rgba(0,0,0,.08);
+}
+
+.env-flap{
+  position:absolute;
+  left:6%; right:6%;
+  top:18%;
+  height:45%;
+  background: linear-gradient(145deg, #f7f4ee, #e7dfd6);
+  clip-path: polygon(0 0, 100% 0, 50% 85%);
+  transform-origin: top center;
+  transition: transform 700ms cubic-bezier(.2,.9,.2,1);
+  border-top-left-radius:10px;
+  border-top-right-radius:10px;
+}
+
+.env-seal{
+  position:absolute;
+  left:50%; top:47%;
+  width:76px; height:76px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at 30% 30%, #c33439, var(--seal));
+  border-radius: 50%;
+  box-shadow: 0 10px 20px rgba(0,0,0,.25);
+}
+
+.envelope.open .env-flap{
+  transform: rotateX(160deg);
+}
+
+/* Letter screen */
+#screen-letter{
+  position:relative;
+}
+
+.letter{
+  background: linear-gradient(180deg, #fbfaf8, var(--paper));
+  color: var(--ink);
+  border-radius: 18px;
+  padding: clamp(18px, 3vw, 34px);
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(0,0,0,.08);
+  position:relative;
+  overflow:hidden;
+}
+
+.letter h2{
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
+  font-size: clamp(28px, 4vw, 44px);
+  margin:0 0 10px;
+  font-style: italic;
+}
+
+.letter p{
+  line-height:1.55;
+  font-size: clamp(15px, 2.2vw, 18px);
+  margin: 10px 0;
+}
+
+.letter hr{
+  border:0;
+  height:1px;
+  background: rgba(90,31,31,.2);
+  margin: 18px 0;
+}
+
+.rsvp a{color: var(--ink); text-decoration: underline}
+
+.actions{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin: 14px 0 6px;
+}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--ink);
+  color:#fff;
+  text-decoration:none;
+  font-weight:600;
+}
+
+.btn.ghost{
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid rgba(90,31,31,.35);
+}
+
+.sign{margin-top:16px}
+.back{
+  margin-top: 14px;
+  border:0;
+  background: transparent;
+  color: var(--ink);
+  font-weight:700;
+  cursor:pointer;
+  padding: 8px 0;
+}
+
+/* Balloons (simple CSS art) */
+.balloons{
+  position:absolute;
+  width:140px; height:220px;
+  opacity:.95;
+  filter: drop-shadow(0 12px 18px rgba(0,0,0,.25));
+}
+.balloons-left{left:-12px; top:10px}
+.balloons-right{right:-12px; top:10px; transform: scaleX(-1)}
+.balloons::before,
+.balloons::after{
+  content:"";
+  position:absolute;
+  width:86px; height:110px;
+  border-radius: 50%;
+  top:12px;
+}
+.balloons::before{
+  left:12px;
+  background: radial-gradient(circle at 30% 30%, #ffd9b0, #f0b073);
+}
+.balloons::after{
+  left:58px;
+  background: radial-gradient(circle at 30% 30%, #bdeeff, #58b6d8);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .env-flap{transition:none}
+}
+
+const envelopeBtn = document.getElementById("envelopeBtn");
+const screenInvite = document.getElementById("screen-invite");
+const screenLetter = document.getElementById("screen-letter");
+const backBtn = document.getElementById("backBtn");
+
+const phone = "+2347034768479"; // change if needed
+const whatsappNumber = "2347034768479"; // WhatsApp needs country code, no +
+const message = encodeURIComponent(
+  "Hello, I’m confirming my attendance for Kachi’s 1st birthday. 🎉"
+);
+
+document.getElementById("whatsAppLink").href =
+  `https://wa.me/${whatsappNumber}?text=${message}`;
+
+function buildICS() {
+  // 19 April 2026, 1:00 PM Nigeria (Africa/Lagos is UTC+1)
+  // We’ll store as UTC for broad compatibility:
+  // 1:00 PM WAT (UTC+1) = 12:00 PM UTC
+  const ics =
+`BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Kachi Birthday//Invitation//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:${Date.now()}@kachisbirthday
+DTSTAMP:20260201T000000Z
+DTSTART:20260419T120000Z
+DTEND:20260419T150000Z
+SUMMARY:Kachi’s 1st Birthday Celebration
+LOCATION:20b Ekulu Avenue, GRA, Enugu (DSTV Office, Opposite Veronica Suites)
+DESCRIPTION:Come dressed in your most colourful & festive attire. RSVP: 0703 476 8479
+END:VEVENT
+END:VCALENDAR`;
+
+  const blob = new Blob([ics], { type: "text/calendar" });
+  const url = URL.createObjectURL(blob);
+  const a = document.getElementById("calendarLink");
+  a.href = url;
+}
+
+buildICS();
+
+envelopeBtn.addEventListener("click", () => {
+  envelopeBtn.classList.add("open");
+  setTimeout(() => {
+    screenInvite.classList.remove("active");
+    screenLetter.classList.add("active");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, 650);
+});
+
+backBtn.addEventListener("click", () => {
+  screenLetter.classList.remove("active");
+  screenInvite.classList.add("active");
+  envelopeBtn.classList.remove("open");
+});
